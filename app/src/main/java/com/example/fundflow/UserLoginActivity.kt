@@ -32,6 +32,11 @@ class UserLoginActivity : AppCompatActivity() {
         val signUpText: TextView = findViewById(R.id.signUpText)
         val showPassword: CheckBox = findViewById(R.id.show_password)
 
+        // Check if the user is already logged in and bypass login
+        if (isUserLoggedIn()) {
+            redirectToHome()
+        }
+
         // Show or hide password when checkbox is toggled
         showPassword.setOnCheckedChangeListener { _, isChecked ->
             passwordInput.inputType = if (isChecked) {
@@ -54,22 +59,15 @@ class UserLoginActivity : AppCompatActivity() {
                             Log.d(TAG, "signInWithEmail:success")
                             Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show()
 
-                            // Determine user role and save it in SharedPreferences
+                            // Determine user role and save login state
                             val userRole = determineUserRole(email)  // Example function
-                            val sharedPref = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE)
-                            sharedPref.edit().putString("userRole", userRole).apply()
+                            saveLoginState(userRole)
 
                             // Redirect based on user role
-                            val intent = if (userRole == "Financebtn") {
-                                Intent(this, FinanceHomeActivity::class.java)
-                            } else {
-                                Intent(this, UserHomeActivity::class.java)
-                            }
-                            startActivity(intent)
-                            finish() // Close current activity
+                            redirectToHome()
                         } else {
                             Log.w(TAG, "signInWithEmail:failure", task.exception)
-                            Toast.makeText(this, "Login failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this, "Login failed.", Toast.LENGTH_SHORT).show()
                         }
                     }
             } else {
@@ -85,6 +83,36 @@ class UserLoginActivity : AppCompatActivity() {
         }
     }
 
+    // Save the login state and user role in SharedPreferences
+    private fun saveLoginState(userRole: String) {
+        val sharedPref = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE)
+        with(sharedPref.edit()) {
+            putBoolean("is_logged_in", true)
+            putString("userRole", userRole)
+            apply()  // Save the changes asynchronously
+        }
+    }
+
+    // Check if the user is logged in
+    private fun isUserLoggedIn(): Boolean {
+        val sharedPref = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE)
+        return sharedPref.getBoolean("is_logged_in", false)
+    }
+
+    // Redirect based on user role saved in SharedPreferences
+    private fun redirectToHome() {
+        val sharedPref = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE)
+        val userRole = sharedPref.getString("userRole", "Userbtn") // Default to "Userbtn"
+
+        val intent = if (userRole == "Financebtn") {
+            Intent(this, FinanceHomeActivity::class.java)
+        } else {
+            Intent(this, UserHomeActivity::class.java)
+        }
+        startActivity(intent)
+        finish() // Close current activity
+    }
+
     // Example function to determine user role (you can implement your own logic)
     private fun determineUserRole(email: String): String {
         // Replace with your logic to determine if the user is a "Financebtn" or "Userbtn"
@@ -92,7 +120,7 @@ class UserLoginActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        // Allow back navigation to WelcomeActivity if user is not logged in successfully
+        // Allow back navigation to WelcomeActivity if the user is not logged in successfully
         val intent = Intent(this, WelcomeActivity::class.java)
         startActivity(intent)
         finish()

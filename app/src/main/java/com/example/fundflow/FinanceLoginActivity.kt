@@ -127,6 +127,7 @@ class FinanceLoginActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        super.onBackPressed() // This will handle back navigation automatically
+        // Prevent back press from taking user to WelcomeActivity
+        moveTaskToBack(true)  // Minimize the app instead
     }
 }
