@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "295941875588",
+    "project_id": "fund-flowm",
+    "storage_bucket": "fund-flowm.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:295941875588:android:5b98e1c06497dd82a21fd1",
+        "android_client_info": {
+          "package_name": "com.example.fundflow"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDdQfEk4JL3GieGv27kYzmWiPJ4pWYlxxM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
