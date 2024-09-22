@@ -10,7 +10,8 @@
     <ImageView
         android:id="@+id/logoImageView"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="167dp"
+        android:layout_marginTop="0dp"
         android:contentDescription="App Logo"
         android:src="@drawable/banner"
         app:layout_constraintEnd_toStartOf="parent"
