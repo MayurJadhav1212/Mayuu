@@ -6,16 +6,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".WelcomeActivity">
+
     <ImageView
         android:id="@+id/logoImageView"
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:contentDescription="App Logo"
         android:src="@drawable/banner"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
         android:id="@+id/welcomeText"
         android:layout_width="wrap_content"
@@ -28,27 +30,34 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/logoImageView" />
+
     <TextView
-        android:layout_width="match_parent"
+        android:id="@+id/financeInfoText"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text=" Only available for Financer. If you are a financer choose this option by filling your username and password."
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginHorizontal="16dp"
+        android:gravity="center"
+        android:text="Only available for Financer. If you are a financer, choose this option by filling in your username and password."
+        app:layout_constraintBottom_toTopOf="@id/Financebtn"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.499" />
+        app:layout_constraintTop_toBottomOf="@id/welcomeText"
+        app:layout_constraintVertical_bias="0.224" />
+
+
     <TextView
-        android:layout_width="wrap_content"
+        android:id="@+id/userInfoText"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:linksClickable="false"
-        android:text=" Only available for the user. If you are a user and related with the financer choose this option by filling your username and password. User can check their Transactions and Pay Instalments by logging in to this page."
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginHorizontal="16dp"
+        android:gravity="center"
+        android:text="Only available for the user. If you are a user and related to the financer, choose this option by filling in your username and password. User can check their Transactions and Pay Instalments by logging in to this page."
+        app:layout_constraintBottom_toTopOf="@id/Userbtn"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.657" />
+        app:layout_constraintTop_toBottomOf="@id/financeInfoText"
+        app:layout_constraintVertical_bias="0.368" />
+
     <Button
         android:id="@+id/Financebtn"
         android:layout_width="150dp"
@@ -63,11 +72,12 @@
         app:layout_constraintTop_toBottomOf="@+id/welcomeText"
         app:layout_constraintVertical_bias="0.712"
         app:layout_constraintWidth_percent="0.7" />
+
     <Button
         android:id="@+id/Userbtn"
         android:layout_width="150dp"
         android:layout_height="50dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="8dp"
         android:background="@drawable/rounded_button_border"
         android:backgroundTint="@android:color/transparent"
         android:padding="12dp"
@@ -75,10 +85,11 @@
         android:textColor="@android:color/black"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.797"
+        app:layout_constraintHorizontal_bias="0.67"
         app:layout_constraintStart_toEndOf="@+id/Financebtn"
-        app:layout_constraintTop_toBottomOf="@id/Financebtn"
+        app:layout_constraintTop_toTopOf="@+id/Financebtn"
         app:layout_constraintWidth_percent="0.7" />
+
     <LinearLayout
         android:id="@+id/socialLoginLayout"
         android:layout_width="wrap_content"

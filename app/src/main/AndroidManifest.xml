@@ -13,6 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FundFlow"
         tools:targetApi="31">
+
         <activity
             android:name=".FinanceRegisterActivity"
             android:exported="false" />
