@@ -6,6 +6,7 @@ import android.text.InputType
 import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 
@@ -23,6 +24,7 @@ class FinanceRegisterActivity : AppCompatActivity() {
     private lateinit var showConfirmPassword: CheckBox
     private lateinit var termsConditions: CheckBox
     private lateinit var registerButton: Button
+    private lateinit var backarow: ImageView
 
     // Firebase authentication instance
     private lateinit var auth: FirebaseAuth
@@ -44,8 +46,7 @@ class FinanceRegisterActivity : AppCompatActivity() {
         showConfirmPassword = findViewById(R.id.show_confirm_password)
         termsConditions = findViewById(R.id.terms_conditions)
         registerButton = findViewById(R.id.register_button)
-
-        // Set up the checkbox to toggle password visibility
+        backarow =  findViewById(R.id.back)        // Set up the checkbox to toggle password visibility
         showPassword.setOnCheckedChangeListener { _, isChecked ->
             password.inputType = if (isChecked) {
                 InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
@@ -85,6 +86,10 @@ class FinanceRegisterActivity : AppCompatActivity() {
                         }
                     }
             }
+        }
+        backarow.setOnClickListener {
+            startActivity(Intent(this, FinanceLoginActivity::class.java))
+            finish()
         }
     }
 

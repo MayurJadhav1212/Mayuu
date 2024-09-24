@@ -8,6 +8,7 @@ import android.util.Log
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -16,26 +17,35 @@ import com.google.firebase.auth.FirebaseAuth
 class UserLoginActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
-    private val TAG = "UserActivity"
+    private val TAG = "UserLoginActivity"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_user_login)
 
         // Initialize Firebase Auth
         auth = FirebaseAuth.getInstance()
 
-        // Find the views by their IDs
+        // Check if the user is already logged in
+        val sharedPref = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE)
+        if (sharedPref.getBoolean("isLoggedIn", false)) {
+            startActivity(Intent(this, UserHomeActivity::class.java))
+
+            return  // Skip the login UI
+        }
+
+        setContentView(R.layout.activity_user_login)
+
+        // Find views by their IDs
         val emailInput: EditText = findViewById(R.id.email)
         val passwordInput: EditText = findViewById(R.id.password)
+        val forgotPasswordText: TextView = findViewById(R.id.forgotPassword)
         val loginButton: Button = findViewById(R.id.loginButton)
+        val rememberMeCheckbox: CheckBox = findViewById(R.id.rememberMe)
         val signUpText: TextView = findViewById(R.id.signUpText)
         val showPassword: CheckBox = findViewById(R.id.show_password)
-
-        // Check if the user is already logged in and bypass login
-        if (isUserLoggedIn()) {
-            redirectToHome()
-        }
+        val backarow: ImageView =  findViewById(R.id.back)
+        // Load saved email if "Remember Me" was checked
+        emailInput.setText(sharedPref.getString("savedEmail", ""))
 
         // Show or hide password when checkbox is toggled
         showPassword.setOnCheckedChangeListener { _, isChecked ->
@@ -59,15 +69,26 @@ class UserLoginActivity : AppCompatActivity() {
                             Log.d(TAG, "signInWithEmail:success")
                             Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show()
 
-                            // Determine user role and save login state
-                            val userRole = determineUserRole(email)  // Example function
-                            saveLoginState(userRole)
+                            // Save login state and user role
+                            with(sharedPref.edit()) {
+                                putBoolean("isLoggedIn", true)
+                                putString("userRole", "Userbtn")  // Change based on actual user role
+                                apply()
+                            }
 
-                            // Redirect based on user role
-                            redirectToHome()
+                            // Save email if "Remember Me" is checked
+                            if (rememberMeCheckbox.isChecked) {
+                                sharedPref.edit().putString("savedEmail", email).apply()
+                            } else {
+                                sharedPref.edit().remove("savedEmail").apply()
+                            }
+
+                            // Redirect to the home activity
+                            startActivity(Intent(this, UserHomeActivity::class.java))
+
                         } else {
                             Log.w(TAG, "signInWithEmail:failure", task.exception)
-                            Toast.makeText(this, "Login failed.", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this, "Login failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
                         }
                     }
             } else {
@@ -75,54 +96,31 @@ class UserLoginActivity : AppCompatActivity() {
             }
         }
 
+        // Handle forgot password click
+        forgotPasswordText.setOnClickListener {
+            Toast.makeText(this, "Forgot password clicked", Toast.LENGTH_SHORT).show()
+            // Logic to navigate to a reset password activity can be added here
+        }
+
         // Handle sign-up text click
         signUpText.setOnClickListener {
-            val intent = Intent(this, UserRegisterActivity::class.java)
-            startActivity(intent)
-            finish() // Close current activity after navigating to sign-up
+            startActivity(Intent(this, UserRegisterActivity::class.java))
+            finish()
         }
-    }
-
-    // Save the login state and user role in SharedPreferences
-    private fun saveLoginState(userRole: String) {
-        val sharedPref = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE)
-        with(sharedPref.edit()) {
-            putBoolean("is_logged_in", true)
-            putString("userRole", userRole)
-            apply()  // Save the changes asynchronously
+        backarow.setOnClickListener {
+            startActivity(Intent(this, WelcomeActivity::class.java))
+            finish()
         }
-    }
 
-    // Check if the user is logged in
-    private fun isUserLoggedIn(): Boolean {
-        val sharedPref = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE)
-        return sharedPref.getBoolean("is_logged_in", false)
-    }
-
-    // Redirect based on user role saved in SharedPreferences
-    private fun redirectToHome() {
-        val sharedPref = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE)
-        val userRole = sharedPref.getString("userRole", "Userbtn") // Default to "Userbtn"
-
-        val intent = if (userRole == "Financebtn") {
-            Intent(this, FinanceHomeActivity::class.java)
-        } else {
-            Intent(this, UserHomeActivity::class.java)
+        // Optional: handle "Remember Me" checkbox feedback
+        rememberMeCheckbox.setOnCheckedChangeListener { _, isChecked ->
+            val message = if (isChecked) "Remember Me checked" else "Remember Me unchecked"
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
         }
-        startActivity(intent)
-        finish() // Close current activity
-    }
-
-    // Example function to determine user role (you can implement your own logic)
-    private fun determineUserRole(email: String): String {
-        // Replace with your logic to determine if the user is a "Financebtn" or "Userbtn"
-        return if (email.endsWith("@finance.com")) "Financebtn" else "Userbtn"
     }
 
     override fun onBackPressed() {
-        // Allow back navigation to WelcomeActivity if the user is not logged in successfully
-        val intent = Intent(this, WelcomeActivity::class.java)
-        startActivity(intent)
-        finish()
+        // Prevent back press from taking the user to WelcomeActivity
+        moveTaskToBack(true)  // Minimize the app instead
     }
 }

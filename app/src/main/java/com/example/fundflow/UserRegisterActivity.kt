@@ -7,6 +7,7 @@ import android.text.InputType
 import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
@@ -23,7 +24,7 @@ class UserRegisterActivity : AppCompatActivity() {
     private lateinit var showConfirmPassword: CheckBox
     private lateinit var termsConditions: CheckBox
     private lateinit var registerButton: Button
-
+    private lateinit var backarow: ImageView
     // Firebase authentication instance
     private lateinit var auth: FirebaseAuth
 
@@ -44,7 +45,7 @@ class UserRegisterActivity : AppCompatActivity() {
         showConfirmPassword = findViewById(R.id.show_confirm_password)
         termsConditions = findViewById(R.id.terms_conditions)
         registerButton = findViewById(R.id.register_button)
-
+        backarow =  findViewById(R.id.back)
         // Set up the checkbox to toggle password visibility
         showPassword.setOnCheckedChangeListener { _, isChecked ->
             password.inputType = if (isChecked) {
@@ -76,6 +77,7 @@ class UserRegisterActivity : AppCompatActivity() {
                         if (task.isSuccessful) {
                             // Registration success
                             Toast.makeText(this, "Registration Successful", Toast.LENGTH_SHORT).show()
+                            val UserLoginActivity = Unit
                             startActivity(Intent(this, UserLoginActivity::class.java))
                             finish()
                             // Optionally navigate to another activity
@@ -86,7 +88,12 @@ class UserRegisterActivity : AppCompatActivity() {
                     }
             }
         }
+        backarow.setOnClickListener {
+            startActivity(Intent(this, UserLoginActivity::class.java))
+            finish()
+        }
     }
+
 
     // Validate user input
     private fun validateInputs(): Boolean {

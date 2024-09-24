@@ -25,7 +25,7 @@ class WelcomeActivity : AppCompatActivity() {
                 return  // Prevent further execution
             }
             "Userbtn" -> {
-                startActivity(Intent(this,UserLoginActivity::class.java))
+                startActivity(Intent(this,UserHomeActivity::class.java))
                 finish()
                 return  // Prevent further execution
             }

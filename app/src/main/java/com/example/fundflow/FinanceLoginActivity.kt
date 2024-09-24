@@ -8,6 +8,7 @@ import android.util.Log
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -47,7 +48,7 @@ class FinanceLoginActivity : AppCompatActivity() {
         val rememberMeCheckbox: CheckBox = findViewById(R.id.rememberMe)
         val signUpText: TextView = findViewById(R.id.signUpText)
         val showPassword: CheckBox = findViewById(R.id.show_password)
-
+        val backarow: ImageView =  findViewById(R.id.back)
         // Load saved email if "Remember Me" was checked
         val savedEmail = sharedPref.getString("savedEmail", "")
         emailInput.setText(savedEmail)
@@ -107,6 +108,11 @@ class FinanceLoginActivity : AppCompatActivity() {
         forgotPasswordText.setOnClickListener {
             Toast.makeText(this, "Forgot password clicked", Toast.LENGTH_SHORT).show()
             // Add logic to navigate to a reset password activity if needed
+        }
+
+        backarow.setOnClickListener {
+            startActivity(Intent(this, WelcomeActivity::class.java))
+            finish()
         }
 
         // Handle sign-up text click
