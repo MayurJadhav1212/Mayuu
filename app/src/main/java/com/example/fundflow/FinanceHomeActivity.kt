@@ -1,8 +1,11 @@
 package com.example.fundflow
 
+import android.content.res.Configuration
+import android.os.Build
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
@@ -55,5 +58,20 @@ class FinanceHomeActivity : AppCompatActivity() {
                 2 -> Toast.makeText(this, "Add Pending Transaction", Toast.LENGTH_SHORT).show()
             }
         }
+
+        // Set the status bar color based on the current theme
+        setStatusBarColor()
+    }
+
+    private fun setStatusBarColor() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            window.statusBarColor = ContextCompat.getColor(this,
+                if (isInDarkMode()) R.color.grey else R.color.blue)
+        }
+    }
+
+    private fun isInDarkMode(): Boolean {
+        val nightModeFlags = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        return nightModeFlags == Configuration.UI_MODE_NIGHT_YES
     }
 }

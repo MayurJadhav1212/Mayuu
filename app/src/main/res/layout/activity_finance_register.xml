@@ -133,7 +133,7 @@
         android:layout_height="wrap_content"
         android:text="Register"
         android:textColor="@android:color/white"
-        android:backgroundTint="@color/blue"
+        android:backgroundTint="?attr/colorPrimary"
         app:layout_constraintTop_toBottomOf="@id/show_confirm_password"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

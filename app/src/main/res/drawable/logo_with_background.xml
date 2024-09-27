@@ -11,7 +11,7 @@
     <!-- Logo on top of the background -->
     <item>
         <bitmap
-            android:src="@drawable/main"
+            android:src="@drawable/app_icon"
             android:gravity="center"
             android:antialias="true"/>
     </item>

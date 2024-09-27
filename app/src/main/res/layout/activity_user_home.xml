@@ -12,7 +12,7 @@
         android:id="@+id/appBarLayout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/blue"
+        android:background="?attr/colorPrimary"
         tools:ignore="MissingConstraints">
 
         <com.google.android.material.appbar.MaterialToolbar
@@ -30,13 +30,13 @@
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                app:popupTheme="@color/blue">
+                app:popupTheme="?attr/colorPrimary">
 
                 <ImageView
                     android:id="@+id/logoImageView"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:src="@drawable/main"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/app_icon"
                     android:padding="8dp"
                     android:background="@drawable/circular_shape"
                     android:scaleType="fitCenter" />
@@ -71,9 +71,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:menu="@menu/bottom_menu"
-        android:background="@color/blue"
+        android:background="?attr/colorPrimary"
         app:itemIconTint="@color/white"
         app:itemTextColor="@color/white"
+        app:itemPaddingBottom="10dp"
         app:itemIconSize="30dp"
         app:itemActiveIndicatorStyle="@style/App.Custom.Indicator" />
 

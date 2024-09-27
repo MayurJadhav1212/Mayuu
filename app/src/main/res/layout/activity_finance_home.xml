@@ -22,7 +22,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/blue"
+            android:background="?attr/colorPrimary"
             android:title="Fund Flow"
             app:popupTheme="@style/ThemeOverlay.MaterialComponents.Dark"
             app:titleTextColor="@color/black" />
@@ -59,7 +59,7 @@
         android:src="@android:drawable/ic_input_add"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:backgroundTint="@color/blue"
+        app:backgroundTint="?attr/colorPrimary"
         app:tint="@android:color/white" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

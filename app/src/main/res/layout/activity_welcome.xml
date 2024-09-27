@@ -77,7 +77,7 @@
         android:layout_height="63dp"
         android:layout_marginStart="40dp"
         android:layout_marginTop="192dp"
-        android:backgroundTint="@color/blue"
+        android:backgroundTint="?attr/colorPrimary"
         android:text="Finance"
         android:textColor="@android:color/white"
         app:layout_constraintBottom_toBottomOf="parent"
