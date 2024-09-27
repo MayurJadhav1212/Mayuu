@@ -24,7 +24,9 @@
             android:layout_height="?attr/actionBarSize"
             android:background="@color/blue"
             android:title="Fund Flow"
-            app:popupTheme="@style/ThemeOverlay.MaterialComponents.Dark" />
+            app:popupTheme="@style/ThemeOverlay.MaterialComponents.Dark"
+            app:titleTextColor="@color/black" />
+
 
         <!-- TabLayout for Chats, Status, Calls -->
         <com.google.android.material.tabs.TabLayout
