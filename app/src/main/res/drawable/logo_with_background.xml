@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- res/drawable/logo_with_background.xml -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Background circle -->
+    <item>
+        <shape android:shape="oval">
+            <solid android:color="@android:color/white" />
+        </shape>
+    </item>
+
+    <!-- Logo on top of the background -->
+    <item>
+        <bitmap
+            android:src="@drawable/main"
+            android:gravity="center"
+            android:antialias="true"/>
+    </item>
+</layer-list>
