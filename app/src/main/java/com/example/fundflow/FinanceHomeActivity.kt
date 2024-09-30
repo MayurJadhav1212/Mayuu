@@ -1,29 +1,34 @@
 package com.example.fundflow
 
-import android.content.res.Configuration
-import android.os.Build
+import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.Toast
-import androidx.core.content.ContextCompat
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import androidx.appcompat.widget.Toolbar
 
 class FinanceHomeActivity : AppCompatActivity() {
 
     private lateinit var tabLayout: TabLayout
     private lateinit var viewPager: ViewPager2
     private lateinit var fab: FloatingActionButton
+    private lateinit var toolbar: Toolbar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_finance_home)
 
         // Initializing Views
+        toolbar = findViewById(R.id.toolbar)
+        setSupportActionBar(toolbar)  // Set the toolbar as the app bar
+
         tabLayout = findViewById(R.id.tabLayout)
         viewPager = findViewById(R.id.viewPager)
         fab = findViewById(R.id.fab)
@@ -58,20 +63,24 @@ class FinanceHomeActivity : AppCompatActivity() {
                 2 -> Toast.makeText(this, "Add Pending Transaction", Toast.LENGTH_SHORT).show()
             }
         }
-
-        // Set the status bar color based on the current theme
-        setStatusBarColor()
     }
 
-    private fun setStatusBarColor() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            window.statusBarColor = ContextCompat.getColor(this,
-                if (isInDarkMode()) R.color.grey else R.color.blue)
+    // Inflate the menu with the profile icon
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.toolbar_menu, menu)
+        return true
+    }
+
+    // Handle profile icon click
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_profile -> {
+                // Handle profile icon click
+                val intent = Intent(this, Profile1Activity::class.java)
+                startActivity(intent)
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
         }
-    }
-
-    private fun isInDarkMode(): Boolean {
-        val nightModeFlags = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
-        return nightModeFlags == Configuration.UI_MODE_NIGHT_YES
     }
 }
