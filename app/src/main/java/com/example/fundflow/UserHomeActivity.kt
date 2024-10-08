@@ -35,7 +35,7 @@ class UserHomeActivity : AppCompatActivity() {
                     replaceFragment(TransactionFragment())
                     true
                 }
-                R.id.bottom_profile -> {
+                R.id.action_profile -> {
                     replaceFragment(ProfileFragment())
                     true
                 }

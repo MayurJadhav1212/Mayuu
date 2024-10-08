@@ -9,8 +9,8 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 class FinanceRegisterActivity : AppCompatActivity() {
 
@@ -26,15 +26,17 @@ class FinanceRegisterActivity : AppCompatActivity() {
     private lateinit var registerButton: Button
     private lateinit var backarow: ImageView
 
-    // Firebase authentication instance
+    // Firebase instances
     private lateinit var auth: FirebaseAuth
+    private lateinit var db: FirebaseFirestore
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_finance_register)  // Set your actual layout
+        setContentView(R.layout.activity_finance_register)
 
-        // Initialize Firebase Auth
+        // Initialize Firebase Auth and Firestore
         auth = FirebaseAuth.getInstance()
+        db = FirebaseFirestore.getInstance()
 
         // Initialize views
         firstName = findViewById(R.id.first_name)
@@ -46,7 +48,9 @@ class FinanceRegisterActivity : AppCompatActivity() {
         showConfirmPassword = findViewById(R.id.show_confirm_password)
         termsConditions = findViewById(R.id.terms_conditions)
         registerButton = findViewById(R.id.register_button)
-        backarow =  findViewById(R.id.back)        // Set up the checkbox to toggle password visibility
+        backarow =  findViewById(R.id.back)
+
+        // Set up the checkbox to toggle password visibility
         showPassword.setOnCheckedChangeListener { _, isChecked ->
             password.inputType = if (isChecked) {
                 InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
@@ -75,8 +79,15 @@ class FinanceRegisterActivity : AppCompatActivity() {
                 auth.createUserWithEmailAndPassword(email, pass)
                     .addOnCompleteListener(this) { task ->
                         if (task.isSuccessful) {
+                            // Get the current user ID
+                            val userId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
+
+                            // Save user data to Firestore after successful registration
+                            saveUserDataToFirestore(userId)
+
                             // Registration success
                             Toast.makeText(this, "Registration Successful", Toast.LENGTH_SHORT).show()
+
                             // Optionally navigate to another activity
                             startActivity(Intent(this, FinanceLoginActivity::class.java))
                             finish()
@@ -87,10 +98,32 @@ class FinanceRegisterActivity : AppCompatActivity() {
                     }
             }
         }
+
         backarow.setOnClickListener {
             startActivity(Intent(this, FinanceLoginActivity::class.java))
             finish()
         }
+    }
+
+    // Save user data to Firestore
+    private fun saveUserDataToFirestore(userId: String) {
+        val user = hashMapOf(
+            "firstName" to firstName.text.toString(),
+            "lastName" to lastName.text.toString(),
+            "email" to emailAddress.text.toString()
+        )
+
+        // Save the user data under the user's ID in Firestore
+        db.collection("Users").document(userId).set(user)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    // User data saved successfully
+                    Toast.makeText(this, "User Data Saved Successfully", Toast.LENGTH_SHORT).show()
+                } else {
+                    // Handle errors
+                    Toast.makeText(this, "Failed to Save User Data: ${task.exception?.message}", Toast.LENGTH_LONG).show()
+                }
+            }
     }
 
     // Validate user input

@@ -14,6 +14,7 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import androidx.appcompat.widget.Toolbar
 
+
 class FinanceHomeActivity : AppCompatActivity() {
 
     private lateinit var tabLayout: TabLayout
@@ -41,7 +42,7 @@ class FinanceHomeActivity : AppCompatActivity() {
                     0 -> AllFragment()     // All transactions
                     1 -> ReceivedFragment()  // Received transactions
                     2 -> PendingFragment()   // Pending transactions
-                    else -> AllFragment() // Default
+                    else -> throw IllegalArgumentException("Invalid position") // Better error handling
                 }
             }
         }
@@ -67,7 +68,7 @@ class FinanceHomeActivity : AppCompatActivity() {
 
     // Inflate the menu with the profile icon
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.toolbar_menu, menu)
+        menuInflater.inflate(R.menu.bottom_menu, menu)
         return true
     }
 
