@@ -3,8 +3,8 @@
     <style name="Base.Theme.FundFlow" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="colorPrimary">@color/grey</item>
         <item name="colorPrimaryVariant">@color/grey_variant</item>
-        <item name="android:statusBarColor">@color/grey</item>
-        <item name="android:navigationBarColor">@color/grey</item>
+        <item name="android:statusBarColor">@color/blue</item>
+        <item name="android:navigationBarColor">@color/blue</item>
         <!-- Dark mode specific colors -->
         <item name="colorOnPrimary">@color/black</item>
         <item name="android:textColor">@color/white</item>
