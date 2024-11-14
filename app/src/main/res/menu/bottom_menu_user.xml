@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/bottom_loans"
+        android:icon="@drawable/loan"
+        android:title="loans"/>
+    <item
+        android:id="@+id/bottom_transaction"
+        android:icon="@drawable/transaction"
+        android:title="transaction" />
+    <item
+        android:id="@+id/action_profile"
+        android:icon="@drawable/baseline_account_circle_24"
+        android:title="profile"/>
+</menu>
