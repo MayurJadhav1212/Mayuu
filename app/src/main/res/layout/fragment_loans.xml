@@ -23,7 +23,8 @@
             android:layout_height="wrap_content"
             app:defaultQueryHint="Search for loans"
             app:iconifiedByDefault="false"
-            app:queryBackground="@android:color/transparent" />
+            app:queryBackground="@android:color/transparent"
+            android:background="@color/white"/>
     </com.google.android.material.card.MaterialCardView>
 
     <!-- RecyclerView for Loan Items -->

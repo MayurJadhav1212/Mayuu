@@ -1,5 +1,6 @@
 package com.example.fundflow
 
+
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -13,6 +14,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
+
+
 
 class UserLoginActivity : AppCompatActivity() {
 
@@ -28,11 +31,13 @@ class UserLoginActivity : AppCompatActivity() {
         // Check if the user is already logged in
         val sharedPref = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE)
         if (sharedPref.getBoolean("isLoggedIn", false)) {
+            // Redirect to home if already logged in
             startActivity(Intent(this, UserHomeActivity::class.java))
-
-            return  // Skip the login UI
+            finish()  // Close the login activity
+            return  // Skip setting up the login UI
         }
 
+        // Set the login layout if the user is not logged in
         setContentView(R.layout.activity_user_login)
 
         // Find views by their IDs
@@ -43,7 +48,8 @@ class UserLoginActivity : AppCompatActivity() {
         val rememberMeCheckbox: CheckBox = findViewById(R.id.rememberMe)
         val signUpText: TextView = findViewById(R.id.signUpText)
         val showPassword: CheckBox = findViewById(R.id.show_password)
-        val backarow: ImageView =  findViewById(R.id.back)
+        val backArrow: ImageView = findViewById(R.id.back)
+
         // Load saved email if "Remember Me" was checked
         emailInput.setText(sharedPref.getString("savedEmail", ""))
 
@@ -69,10 +75,10 @@ class UserLoginActivity : AppCompatActivity() {
                             Log.d(TAG, "signInWithEmail:success")
                             Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show()
 
-                            // Save login state and user role
+                            // Save login state
                             with(sharedPref.edit()) {
                                 putBoolean("isLoggedIn", true)
-                                putString("userRole", "Userbtn")  // Change based on actual user role
+                                putString("userRole", "Userbtn")  // Update with actual role if needed
                                 apply()
                             }
 
@@ -85,7 +91,7 @@ class UserLoginActivity : AppCompatActivity() {
 
                             // Redirect to the home activity
                             startActivity(Intent(this, UserHomeActivity::class.java))
-
+                            finish()
                         } else {
                             Log.w(TAG, "signInWithEmail:failure", task.exception)
                             Toast.makeText(this, "Login failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
@@ -107,12 +113,14 @@ class UserLoginActivity : AppCompatActivity() {
             startActivity(Intent(this, UserRegisterActivity::class.java))
             finish()
         }
-        backarow.setOnClickListener {
+
+        // Handle back arrow click
+        backArrow.setOnClickListener {
             startActivity(Intent(this, WelcomeActivity::class.java))
             finish()
         }
 
-        // Optional: handle "Remember Me" checkbox feedback
+        // Handle "Remember Me" checkbox feedback
         rememberMeCheckbox.setOnCheckedChangeListener { _, isChecked ->
             val message = if (isChecked) "Remember Me checked" else "Remember Me unchecked"
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
