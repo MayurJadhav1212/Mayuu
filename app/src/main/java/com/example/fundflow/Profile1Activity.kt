@@ -30,8 +30,8 @@ class Profile1Activity : AppCompatActivity() {
         db = FirebaseFirestore.getInstance()
 
         // Initialize views
-        userName = findViewById(R.id.user_name)
-        userEmail = findViewById(R.id.user_email)
+        userName = findViewById(R.id.profile_name)
+        userEmail = findViewById(R.id.profile_email)
         logoutButton = findViewById(R.id.logout_button)
 
         // Fetch and display user details

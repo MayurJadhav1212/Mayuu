@@ -93,14 +93,6 @@ class UserHomeActivity : AppCompatActivity() {
                 startActivity(intent)
                 return true
             }
-            R.id.menu_logout -> {
-                // Log out the user and navigate to UserLoginActivity
-                auth.signOut()
-                val intent = Intent(this, UserLoginActivity::class.java)
-                startActivity(intent)
-                finish()
-                return true
-            }
         }
         return super.onOptionsItemSelected(item)
     }

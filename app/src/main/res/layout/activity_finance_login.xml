@@ -99,7 +99,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Login to your account"
-        android:backgroundTint="?attr/colorPrimary"
+        android:backgroundTint="@color/blue"
         android:textColor="#FFFFFF"
         android:textStyle="bold"
         android:padding="16dp"
