@@ -53,16 +53,16 @@ class UserHomeActivity : AppCompatActivity() {
         bottomNavigationView = findViewById(R.id.bottom_navigation)
         bottomNavigationView.setOnItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
+                R.id.bottom_home -> {
+                    replaceFragment(homeFragment())
+                    true
+                }
                 R.id.bottom_loans -> {
                     replaceFragment(LoansFragment())
                     true
                 }
-                R.id.bottom_transaction -> {
-                    replaceFragment(TransactionFragment())
-                    true
-                }
                 R.id.action_profile -> {
-                    replaceFragment(ProfileFragment())
+                    replaceFragment(dashbordFragment())
                     true
                 }
                 else -> false
