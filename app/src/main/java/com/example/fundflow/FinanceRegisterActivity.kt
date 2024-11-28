@@ -157,3 +157,4 @@ class FinanceRegisterActivity : AppCompatActivity() {
         return true
     }
 }
+//g
