@@ -117,7 +117,7 @@ class FinanceLoginActivity : AppCompatActivity() {
 
         // Handle sign-up text click
         signUpText.setOnClickListener {
-            val intent = Intent(this, FinanceRegisterActivity::class.java)
+            val intent = Intent(this,FinanceRegisterActivity::class.java)
             startActivity(intent)
             finish()
         }

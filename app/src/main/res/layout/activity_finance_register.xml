@@ -36,7 +36,7 @@
         android:id="@+id/first_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:hint="Register Your Finance Name"
+        android:hint="First Name"
         android:padding="12dp"
         android:backgroundTint="@color/black"
         android:textColor="@android:color/black"
@@ -50,7 +50,7 @@
         android:id="@+id/last_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:hint="Enter Your Name"
+        android:hint="Last Name"
         android:padding="12dp"
         android:backgroundTint="@color/black"
         android:textColor="@android:color/black"
@@ -126,37 +126,6 @@
         app:layout_constraintStart_toStartOf="@id/confirm_password"
         android:layout_marginTop="8dp" />
 
-    <!-- Mobile Number Input -->
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayoutMobile"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:hint="Mobile Number"
-        app:boxStrokeColor="@color/black"
-        app:boxStrokeWidth="2dp"
-        app:counterEnabled="true"
-        app:counterMaxLength="10"
-        app:errorEnabled="true"
-        app:helperText="Enter a 10-digit mobile number"
-        app:layout_constraintTop_toBottomOf="@id/show_confirm_password"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintWidth_percent="0.8"
-        android:layout_marginTop="16dp">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/mobile_number"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="phone"
-            android:maxLength="10"
-            android:textColor="@android:color/black"
-            android:hint="Mobile Number"
-            android:importantForAutofill="yes"
-            android:autofillHints="phone" />
-
-    </com.google.android.material.textfield.TextInputLayout>
-
     <!-- Register Button -->
     <Button
         android:id="@+id/register_button"
@@ -164,8 +133,8 @@
         android:layout_height="wrap_content"
         android:text="Register"
         android:textColor="@android:color/white"
-        android:backgroundTint="@color/blue"
-        app:layout_constraintTop_toBottomOf="@id/textInputLayoutMobile"
+        android:backgroundTint="?attr/colorPrimary"
+        app:layout_constraintTop_toBottomOf="@id/show_confirm_password"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintWidth_percent="0.8"

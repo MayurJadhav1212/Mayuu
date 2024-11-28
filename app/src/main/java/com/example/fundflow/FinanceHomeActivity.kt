@@ -47,6 +47,8 @@ class FinanceHomeActivity : AppCompatActivity() {
             }
         }
 
+
+
         // Connecting the TabLayout with the ViewPager2
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             when (position) {
