@@ -23,7 +23,7 @@ class UserProfileActivity : AppCompatActivity() {
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_user_profile)
+        setContentView(R.layout.activity_user_profile )
 
         // Initialize Firebase instances
         auth = FirebaseAuth.getInstance()

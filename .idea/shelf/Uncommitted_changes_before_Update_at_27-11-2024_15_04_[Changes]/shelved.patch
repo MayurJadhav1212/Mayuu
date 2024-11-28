@@ -1,0 +1,248 @@
+Index: app/src/main/java/com/example/fundflow/ProfileFragment.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.fundflow\r\n\r\nimport android.content.Intent\r\nimport android.os.Bundle\r\nimport android.util.Log\r\nimport android.view.LayoutInflater\r\nimport android.view.View\r\nimport android.view.ViewGroup\r\nimport android.widget.Button\r\nimport android.widget.ImageView\r\nimport android.widget.TextView\r\nimport android.widget.Toast\r\nimport androidx.fragment.app.Fragment\r\nimport com.google.firebase.auth.FirebaseAuth\r\nimport com.google.firebase.firestore.FirebaseFirestore\r\nimport com.squareup.picasso.Picasso\r\n\r\nclass ProfileFragment : Fragment() {\r\n\r\n    private lateinit var auth: FirebaseAuth\r\n    private lateinit var db: FirebaseFirestore\r\n    private lateinit var profileImage: ImageView\r\n    private lateinit var firstName: TextView\r\n    private lateinit var userEmail: TextView\r\n\r\n    override fun onCreateView(\r\n        inflater: LayoutInflater, container: ViewGroup?,\r\n        savedInstanceState: Bundle?\r\n    ): View? {\r\n        // Inflate the layout for this fragment\r\n        val view = inflater.inflate(R.layout.fragment_profile, container, false)\r\n\r\n        // Initialize Firebase Auth and Firestore\r\n        auth = FirebaseAuth.getInstance()\r\n        db = FirebaseFirestore.getInstance()\r\n\r\n        // Bind views\r\n        profileImage = view.findViewById(R.id.profileImage)\r\n        firstName = view.findViewById(R.id.userName)\r\n        userEmail = view.findViewById(R.id.userEmail)\r\n        val editProfileButton = view.findViewById<Button>(R.id.editProfileButton)\r\n        val logoutButton = view.findViewById<Button>(R.id.logoutButton)\r\n\r\n        // Load user information\r\n        loadUserInfo()\r\n\r\n        // Set button click listeners\r\n        editProfileButton.setOnClickListener {\r\n            Toast.makeText(activity, \"Edit Profile Clicked\", Toast.LENGTH_SHORT).show()\r\n            // Example: startActivity(Intent(activity, EditProfileActivity::class.java))\r\n        }\r\n\r\n        logoutButton.setOnClickListener {\r\n            Log.d(\"ProfileFragment\", \"Logout button clicked\")\r\n\r\n            auth.signOut()\r\n            Log.d(\"ProfileFragment\", \"User signed out\")\r\n\r\n            val intent = Intent(requireContext(), UserLoginActivity::class.java)\r\n            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK\r\n            startActivity(intent)\r\n            Log.d(\"ProfileFragment\", \"Redirecting to UserLoginActivity\")\r\n        }\r\n\r\n\r\n\r\n\r\n        return view\r\n    }\r\n\r\n    private fun loadUserInfo() {\r\n        val currentUser = auth.currentUser\r\n        if (currentUser != null) {\r\n            // Set email from auth object\r\n            userEmail.text = currentUser.email\r\n\r\n            // Fetch additional user details from Firestore\r\n            db.collection(\"users\").document(currentUser.uid).get()\r\n                .addOnSuccessListener { document ->\r\n                    if (document.exists()) {\r\n                        // Check if 'name' field exists in Firestore document\r\n                        val name = document.getString(\"name\")\r\n                        if (!name.isNullOrEmpty()) {\r\n                            firstName.text = name\r\n                        } else {\r\n                            Log.e(\"ProfileFragment\", \"Name field is empty or missing in Firestore\")\r\n                            Toast.makeText(activity, \"Name field missing\", Toast.LENGTH_SHORT).show()\r\n                            firstName.text = \"Unknown Name\" // Default if name is missing\r\n                        }\r\n\r\n                        // Load profile image with Picasso if URL exists\r\n                        val profileImageUrl = document.getString(\"profileImageUrl\")\r\n                        if (!profileImageUrl.isNullOrEmpty()) {\r\n                            Picasso.get()\r\n                                .load(profileImageUrl)\r\n                                .placeholder(R.drawable.baseline_account_circle_24)  // Placeholder while loading\r\n                                .error(R.drawable.baseline_account_circle_24)       // Error image\r\n                                .into(profileImage)\r\n                        } else {\r\n                            profileImage.setImageResource(R.drawable.baseline_account_circle_24)\r\n                        }\r\n                    } else {\r\n                        Log.e(\"ProfileFragment\", \"No document found for user ID: ${currentUser.uid}\")\r\n                        Toast.makeText(activity, \"No user data found\", Toast.LENGTH_SHORT).show()\r\n                    }\r\n                }\r\n                .addOnFailureListener { exception ->\r\n                    Log.e(\"ProfileFragment\", \"Failed to load user data: ${exception.message}\")\r\n                    Toast.makeText(activity, \"Failed to load user data: ${exception.message}\", Toast.LENGTH_SHORT).show()\r\n                }\r\n        } else {\r\n            Log.e(\"ProfileFragment\", \"User not signed in\")\r\n            Toast.makeText(activity, \"User not signed in\", Toast.LENGTH_SHORT).show()\r\n        }\r\n    }\r\n}\r\n
+===================================================================
+diff --git a/app/src/main/java/com/example/fundflow/ProfileFragment.kt b/app/src/main/java/com/example/fundflow/ProfileFragment.kt
+--- a/app/src/main/java/com/example/fundflow/ProfileFragment.kt	(revision 0f76c606051282ee7164fa1bec148caaf650cbad)
++++ b/app/src/main/java/com/example/fundflow/ProfileFragment.kt	(date 1732698223459)
+@@ -1,116 +1,0 @@
+-package com.example.fundflow
+-
+-import android.content.Intent
+-import android.os.Bundle
+-import android.util.Log
+-import android.view.LayoutInflater
+-import android.view.View
+-import android.view.ViewGroup
+-import android.widget.Button
+-import android.widget.ImageView
+-import android.widget.TextView
+-import android.widget.Toast
+-import androidx.fragment.app.Fragment
+-import com.google.firebase.auth.FirebaseAuth
+-import com.google.firebase.firestore.FirebaseFirestore
+-import com.squareup.picasso.Picasso
+-
+-class ProfileFragment : Fragment() {
+-
+-    private lateinit var auth: FirebaseAuth
+-    private lateinit var db: FirebaseFirestore
+-    private lateinit var profileImage: ImageView
+-    private lateinit var firstName: TextView
+-    private lateinit var userEmail: TextView
+-
+-    override fun onCreateView(
+-        inflater: LayoutInflater, container: ViewGroup?,
+-        savedInstanceState: Bundle?
+-    ): View? {
+-        // Inflate the layout for this fragment
+-        val view = inflater.inflate(R.layout.fragment_profile, container, false)
+-
+-        // Initialize Firebase Auth and Firestore
+-        auth = FirebaseAuth.getInstance()
+-        db = FirebaseFirestore.getInstance()
+-
+-        // Bind views
+-        profileImage = view.findViewById(R.id.profileImage)
+-        firstName = view.findViewById(R.id.userName)
+-        userEmail = view.findViewById(R.id.userEmail)
+-        val editProfileButton = view.findViewById<Button>(R.id.editProfileButton)
+-        val logoutButton = view.findViewById<Button>(R.id.logoutButton)
+-
+-        // Load user information
+-        loadUserInfo()
+-
+-        // Set button click listeners
+-        editProfileButton.setOnClickListener {
+-            Toast.makeText(activity, "Edit Profile Clicked", Toast.LENGTH_SHORT).show()
+-            // Example: startActivity(Intent(activity, EditProfileActivity::class.java))
+-        }
+-
+-        logoutButton.setOnClickListener {
+-            Log.d("ProfileFragment", "Logout button clicked")
+-
+-            auth.signOut()
+-            Log.d("ProfileFragment", "User signed out")
+-
+-            val intent = Intent(requireContext(), UserLoginActivity::class.java)
+-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+-            startActivity(intent)
+-            Log.d("ProfileFragment", "Redirecting to UserLoginActivity")
+-        }
+-
+-
+-
+-
+-        return view
+-    }
+-
+-    private fun loadUserInfo() {
+-        val currentUser = auth.currentUser
+-        if (currentUser != null) {
+-            // Set email from auth object
+-            userEmail.text = currentUser.email
+-
+-            // Fetch additional user details from Firestore
+-            db.collection("users").document(currentUser.uid).get()
+-                .addOnSuccessListener { document ->
+-                    if (document.exists()) {
+-                        // Check if 'name' field exists in Firestore document
+-                        val name = document.getString("name")
+-                        if (!name.isNullOrEmpty()) {
+-                            firstName.text = name
+-                        } else {
+-                            Log.e("ProfileFragment", "Name field is empty or missing in Firestore")
+-                            Toast.makeText(activity, "Name field missing", Toast.LENGTH_SHORT).show()
+-                            firstName.text = "Unknown Name" // Default if name is missing
+-                        }
+-
+-                        // Load profile image with Picasso if URL exists
+-                        val profileImageUrl = document.getString("profileImageUrl")
+-                        if (!profileImageUrl.isNullOrEmpty()) {
+-                            Picasso.get()
+-                                .load(profileImageUrl)
+-                                .placeholder(R.drawable.baseline_account_circle_24)  // Placeholder while loading
+-                                .error(R.drawable.baseline_account_circle_24)       // Error image
+-                                .into(profileImage)
+-                        } else {
+-                            profileImage.setImageResource(R.drawable.baseline_account_circle_24)
+-                        }
+-                    } else {
+-                        Log.e("ProfileFragment", "No document found for user ID: ${currentUser.uid}")
+-                        Toast.makeText(activity, "No user data found", Toast.LENGTH_SHORT).show()
+-                    }
+-                }
+-                .addOnFailureListener { exception ->
+-                    Log.e("ProfileFragment", "Failed to load user data: ${exception.message}")
+-                    Toast.makeText(activity, "Failed to load user data: ${exception.message}", Toast.LENGTH_SHORT).show()
+-                }
+-        } else {
+-            Log.e("ProfileFragment", "User not signed in")
+-            Toast.makeText(activity, "User not signed in", Toast.LENGTH_SHORT).show()
+-        }
+-    }
+-}
+Index: app/src/main/res/layout/fragment_profile.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<FrameLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    xmlns:app=\"http://schemas.android.com/apk/res-auto\"\r\n    xmlns:tools=\"http://schemas.android.com/tools\"\r\n    android:layout_width=\"match_parent\"\r\n    android:layout_height=\"match_parent\"\r\n    tools:context=\".ProfileFragment\">\r\n\r\n    <LinearLayout\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"match_parent\"\r\n        android:orientation=\"vertical\"\r\n        android:padding=\"16dp\"\r\n        android:background=\"#F5F5F5\"\r\n        android:gravity=\"center\">\r\n\r\n        <!-- Profile Picture -->\r\n        <ImageView\r\n            android:id=\"@+id/profileImage\"\r\n            android:layout_width=\"120dp\"\r\n            android:layout_height=\"120dp\"\r\n            android:contentDescription=\"Profile Image\"\r\n            android:padding=\"8dp\"\r\n            android:src=\"@drawable/baseline_account_circle_24\" />\r\n\r\n        <!-- User Name -->\r\n        <TextView\r\n            android:id=\"@+id/userName\"\r\n            android:layout_width=\"wrap_content\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:layout_marginTop=\"16dp\"\r\n            android:textSize=\"24sp\"\r\n            android:textColor=\"#000000\"\r\n            android:textStyle=\"bold\"\r\n            tools:text=\"John Doe\" />\r\n\r\n        <!-- User Email -->\r\n        <TextView\r\n            android:id=\"@+id/userEmail\"\r\n            android:layout_width=\"wrap_content\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:layout_marginTop=\"8dp\"\r\n            android:textSize=\"16sp\"\r\n            android:textColor=\"#777777\"\r\n            tools:text=\"johndoe@example.com\" />\r\n\r\n        <!-- Buttons Section -->\r\n        <LinearLayout\r\n            android:layout_width=\"match_parent\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:orientation=\"horizontal\"\r\n            android:gravity=\"center\"\r\n            android:layout_marginTop=\"24dp\">\r\n\r\n            <!-- Edit Profile Button -->\r\n            <Button\r\n                android:id=\"@+id/editProfileButton\"\r\n                android:layout_width=\"wrap_content\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:layout_marginEnd=\"8dp\"\r\n                android:text=\"Edit Profile\"\r\n                android:textColor=\"#FFFFFF\"\r\n                app:backgroundTint=\"#4CAF50\" />\r\n\r\n            <!-- Logout Button -->\r\n            <Button\r\n                android:id=\"@+id/logoutButton\"\r\n                android:layout_width=\"wrap_content\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:text=\"Log Out\"\r\n                android:textColor=\"#FFFFFF\"\r\n                app:backgroundTint=\"#F44336\" />\r\n        </LinearLayout>\r\n    </LinearLayout>\r\n</FrameLayout>\r\n
+===================================================================
+diff --git a/app/src/main/res/layout/fragment_profile.xml b/app/src/main/res/layout/fragment_profile.xml
+--- a/app/src/main/res/layout/fragment_profile.xml	(revision 0f76c606051282ee7164fa1bec148caaf650cbad)
++++ b/app/src/main/res/layout/fragment_profile.xml	(date 1732638361974)
+@@ -1,75 +1,45 @@
+-<?xml version="1.0" encoding="utf-8"?>
+-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+-    xmlns:app="http://schemas.android.com/apk/res-auto"
+-    xmlns:tools="http://schemas.android.com/tools"
++<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+     android:layout_width="match_parent"
+     android:layout_height="match_parent"
+-    tools:context=".ProfileFragment">
+-
+-    <LinearLayout
+-        android:layout_width="match_parent"
+-        android:layout_height="match_parent"
+-        android:orientation="vertical"
+-        android:padding="16dp"
+-        android:background="#F5F5F5"
+-        android:gravity="center">
++    xmlns:tools="http://schemas.android.com/tools"
++    android:orientation="vertical"
++    android:padding="16dp"
++    tools:context=".ProfileFragment">
+ 
+-        <!-- Profile Picture -->
+-        <ImageView
+-            android:id="@+id/profileImage"
+-            android:layout_width="120dp"
+-            android:layout_height="120dp"
+-            android:contentDescription="Profile Image"
+-            android:padding="8dp"
+-            android:src="@drawable/baseline_account_circle_24" />
+-
+-        <!-- User Name -->
+-        <TextView
+-            android:id="@+id/userName"
+-            android:layout_width="wrap_content"
+-            android:layout_height="wrap_content"
+-            android:layout_marginTop="16dp"
+-            android:textSize="24sp"
+-            android:textColor="#000000"
+-            android:textStyle="bold"
+-            tools:text="John Doe" />
++    <!-- Loan Amount Input -->
++    <TextView
++        android:layout_width="wrap_content"
++        android:layout_height="wrap_content"
++        android:text="Loan Amount"
++        android:textStyle="bold" />
+ 
+-        <!-- User Email -->
+-        <TextView
+-            android:id="@+id/userEmail"
+-            android:layout_width="wrap_content"
+-            android:layout_height="wrap_content"
+-            android:layout_marginTop="8dp"
+-            android:textSize="16sp"
+-            android:textColor="#777777"
+-            tools:text="johndoe@example.com" />
++    <EditText
++        android:id="@+id/etLoanAmount"
++        android:layout_width="match_parent"
++        android:layout_height="wrap_content"
++        android:hint="Enter loan amount"
++        android:inputType="numberDecimal" />
++
++    <!-- Repayment Duration -->
++    <TextView
++        android:layout_width="wrap_content"
++        android:layout_height="wrap_content"
++        android:text="Repayment Duration (Months)"
++        android:layout_marginTop="16dp"
++        android:textStyle="bold" />
+ 
+-        <!-- Buttons Section -->
+-        <LinearLayout
+-            android:layout_width="match_parent"
+-            android:layout_height="wrap_content"
+-            android:orientation="horizontal"
+-            android:gravity="center"
+-            android:layout_marginTop="24dp">
+-
+-            <!-- Edit Profile Button -->
+-            <Button
+-                android:id="@+id/editProfileButton"
+-                android:layout_width="wrap_content"
+-                android:layout_height="wrap_content"
+-                android:layout_marginEnd="8dp"
+-                android:text="Edit Profile"
+-                android:textColor="#FFFFFF"
+-                app:backgroundTint="#4CAF50" />
++    <EditText
++        android:id="@+id/etRepaymentDuration"
++        android:layout_width="match_parent"
++        android:layout_height="wrap_content"
++        android:hint="Enter duration (e.g., 12)"
++        android:inputType="number" />
+ 
+-            <!-- Logout Button -->
+-            <Button
+-                android:id="@+id/logoutButton"
+-                android:layout_width="wrap_content"
+-                android:layout_height="wrap_content"
+-                android:text="Log Out"
+-                android:textColor="#FFFFFF"
+-                app:backgroundTint="#F44336" />
+-        </LinearLayout>
+-    </LinearLayout>
+-</FrameLayout>
++    <!-- Submit Button -->
++    <Button
++        android:id="@+id/request"
++        android:layout_width="match_parent"
++        android:layout_height="wrap_content"
++        android:text="Submit Loan Request"
++        android:layout_marginTop="24dp" />
++</LinearLayout>
