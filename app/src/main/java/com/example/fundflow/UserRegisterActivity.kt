@@ -3,7 +3,7 @@ package com.example.fundflow
 import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
-import android.widget.CheckBox
+import android.view.MotionEvent
 import android.widget.EditText
 import android.widget.Button
 import android.widget.ImageView
@@ -14,17 +14,14 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 class UserRegisterActivity : AppCompatActivity() {
 
-    // Declare variables for EditTexts and CheckBoxes
+    // Declare variables for EditTexts and Buttons
     private lateinit var firstName: EditText
     private lateinit var lastName: EditText
     private lateinit var emailAddress: EditText
     private lateinit var password: EditText
     private lateinit var confirmPassword: EditText
-    private lateinit var showPassword: CheckBox
-    private lateinit var showConfirmPassword: CheckBox
-    private lateinit var termsConditions: CheckBox
     private lateinit var registerButton: Button
-    private lateinit var backarow: ImageView
+    private lateinit var backArrow: ImageView
 
     // Firebase instances
     private lateinit var auth: FirebaseAuth
@@ -44,29 +41,43 @@ class UserRegisterActivity : AppCompatActivity() {
         emailAddress = findViewById(R.id.email_address)
         password = findViewById(R.id.password)
         confirmPassword = findViewById(R.id.confirm_password)
-        showPassword = findViewById(R.id.show_password)
-        showConfirmPassword = findViewById(R.id.show_confirm_password)
-        termsConditions = findViewById(R.id.terms_conditions)
         registerButton = findViewById(R.id.register_button)
-        backarow =  findViewById(R.id.back)
+        backArrow = findViewById(R.id.back)
 
-        // Set up the checkbox to toggle password visibility
-        showPassword.setOnCheckedChangeListener { _, isChecked ->
-            password.inputType = if (isChecked) {
-                InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
-            } else {
-                InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
-            }
-            password.setSelection(password.text.length)
+        // Handle password visibility toggle for the "password" field
+        password.setOnTouchListener { _, event ->
+            if (event.action == MotionEvent.ACTION_UP) {
+                val drawableEnd = password.compoundDrawablesRelative[2] // Drawable at the end
+                if (drawableEnd != null && event.rawX >= (password.right - drawableEnd.bounds.width())) {
+                    if (password.inputType == InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD) {
+                        password.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+                        password.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.baseline_visibility_off_24, 0)
+                    } else {
+                        password.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+                        password.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.baseline_visibility_off_24, 0)
+                    }
+                    password.setSelection(password.text.length) // Keep cursor at the end
+                    true
+                } else false
+            } else false
         }
 
-        showConfirmPassword.setOnCheckedChangeListener { _, isChecked ->
-            confirmPassword.inputType = if (isChecked) {
-                InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
-            } else {
-                InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
-            }
-            confirmPassword.setSelection(confirmPassword.text.length)
+        // Handle password visibility toggle for the "confirmPassword" field
+        confirmPassword.setOnTouchListener { _, event ->
+            if (event.action == MotionEvent.ACTION_UP) {
+                val drawableEnd = confirmPassword.compoundDrawablesRelative[2] // Drawable at the end
+                if (drawableEnd != null && event.rawX >= (confirmPassword.right - drawableEnd.bounds.width())) {
+                    if (confirmPassword.inputType == InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD) {
+                        confirmPassword.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+                        confirmPassword.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.baseline_visibility_off_24, 0)
+                    } else {
+                        confirmPassword.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+                        confirmPassword.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.baseline_visibility_off_24, 0)
+                    }
+                    confirmPassword.setSelection(confirmPassword.text.length) // Keep cursor at the end
+                    true
+                } else false
+            } else false
         }
 
         // Handle register button click
@@ -99,7 +110,7 @@ class UserRegisterActivity : AppCompatActivity() {
             }
         }
 
-        backarow.setOnClickListener {
+        backArrow.setOnClickListener {
             startActivity(Intent(this, UserLoginActivity::class.java))
             finish()
         }
@@ -136,11 +147,6 @@ class UserRegisterActivity : AppCompatActivity() {
 
         if (password.text.toString() != confirmPassword.text.toString()) {
             Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT).show()
-            return false
-        }
-
-        if (!termsConditions.isChecked) {
-            Toast.makeText(this, "Please accept the Terms and Conditions", Toast.LENGTH_SHORT).show()
             return false
         }
 

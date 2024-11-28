@@ -1,0 +1,25 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Shadow layer -->
+    <item>
+        <shape>
+            <solid android:color="#FFFFFF" /> <!-- Transparent shadow base -->
+            <corners android:radius="24dp" /> <!-- Smooth rounded corners -->
+        </shape>
+    </item>
+
+    <!-- Foreground layer for the input field -->
+    <item android:left="6dp" android:right="6dp" android:top="6dp" android:bottom="6dp">
+        <shape>
+            <solid android:color="#C4E4FF" /> <!-- Inside white background -->
+            <corners android:radius="24dp" />
+        </shape>
+    </item>
+
+    <!-- Subtle shadow -->
+    <item>
+        <shape>
+            <solid android:color="#FFFFFF" />
+            <corners android:radius="24dp" />
+        </shape>
+    </item>
+</layer-list>

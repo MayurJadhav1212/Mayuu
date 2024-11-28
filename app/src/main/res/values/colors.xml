@@ -4,4 +4,7 @@
     <color name="white">#FFFFFFFF</color>
     <color name="blue">#008B8B</color>
     <color name="light_blue">#C4E4FF</color>
+    <color name="Lighter_Shade">#E0F4FF</color>
+    <color name="light_gray">#F7F7F7</color>
+
 </resources>
