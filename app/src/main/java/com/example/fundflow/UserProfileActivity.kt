@@ -18,12 +18,13 @@ class UserProfileActivity : AppCompatActivity() {
 
     private lateinit var userName: TextView
     private lateinit var userEmail: TextView
+    private lateinit var userMobile: TextView  // TextView for mobile number
     private lateinit var logoutButton: Button
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_user_profile )
+        setContentView(R.layout.activity_user_profile)
 
         // Initialize Firebase instances
         auth = FirebaseAuth.getInstance()
@@ -32,6 +33,7 @@ class UserProfileActivity : AppCompatActivity() {
         // Initialize views
         userName = findViewById(R.id.profile_name)
         userEmail = findViewById(R.id.profile_email)
+        userMobile = findViewById(R.id.profile_mobile)  // Initialize mobile TextView
         logoutButton = findViewById(R.id.logout_button)
 
         // Fetch and display user details
@@ -40,7 +42,8 @@ class UserProfileActivity : AppCompatActivity() {
         // Handle logout button click
         logoutButton.setOnClickListener {
             auth.signOut()
-            startActivity(Intent(this, FinanceLoginActivity::class.java))
+            Toast.makeText(this, "Logged out successfully", Toast.LENGTH_SHORT).show()
+            startActivity(Intent(this, WelcomeActivity::class.java))
             finish()
         }
     }
@@ -53,14 +56,17 @@ class UserProfileActivity : AppCompatActivity() {
             // Fetch user data from Firestore
             db.collection("Users").document(userId).get()
                 .addOnSuccessListener { document ->
-                    if (document != null) {
-                        val firstName = document.getString("firstName")
-                        val lastName = document.getString("lastName")
-                        val email = document.getString("email")
+                    if (document != null && document.exists()) {
+                        // Safely retrieve values
+                        val firstName = document.getString("firstName") ?: "Unknown"
+                        val lastName = document.getString("lastName") ?: "User"
+                        val email = document.getString("email") ?: "Not provided"
+                        val mobile = document.getString("mobile") ?: "Not provided" // Correct key
 
-                        // Display the user's name and email
+                        // Display the user's name, email, and mobile number
                         userName.text = "$firstName $lastName"
                         userEmail.text = email
+                        userMobile.text = mobile  // Display mobile number
                     } else {
                         Toast.makeText(this, "User data not found", Toast.LENGTH_SHORT).show()
                     }

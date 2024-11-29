@@ -1,17 +1,17 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- Shadow layer -->
     <item android:left="2dp" android:right="2dp" android:top="2dp" android:bottom="2dp">
-        <shape xmlns:android="http://schemas.android.com/apk/res/android">
+        <shape>
             <solid android:color="@android:color/darker_gray" /> <!-- Shadow color -->
-            <corners android:radius="25dp" />
+            <corners android:radius="8dp" /> <!-- Adjust corner radius if needed -->
         </shape>
     </item>
 
     <!-- Main background layer -->
     <item>
-        <shape xmlns:android="http://schemas.android.com/apk/res/android">
-            <solid android:color="@color/blue" />
-            <corners android:radius="25dp" />
+        <shape>
+            <solid android:color="#008B8B" /> <!-- Replace @color/blue for testing -->
+            <corners android:radius="8dp" /> <!-- Match shadow corners -->
         </shape>
     </item>
 </layer-list>

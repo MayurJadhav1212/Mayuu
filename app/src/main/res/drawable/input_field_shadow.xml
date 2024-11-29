@@ -3,7 +3,7 @@
     <item>
         <shape>
             <solid android:color="#FFFFFF" /> <!-- Transparent shadow base -->
-            <corners android:radius="24dp" /> <!-- Smooth rounded corners -->
+            <corners android:radius="0dp" /> <!-- Smooth rounded corners -->
         </shape>
     </item>
 
@@ -11,7 +11,7 @@
     <item android:left="6dp" android:right="6dp" android:top="6dp" android:bottom="6dp">
         <shape>
             <solid android:color="#C4E4FF" /> <!-- Inside white background -->
-            <corners android:radius="24dp" />
+            <corners android:radius="0dp" />
         </shape>
     </item>
 
@@ -19,7 +19,7 @@
     <item>
         <shape>
             <solid android:color="#FFFFFF" />
-            <corners android:radius="24dp" />
+            <corners android:radius="0dp" />
         </shape>
     </item>
 </layer-list>

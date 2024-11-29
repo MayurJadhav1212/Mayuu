@@ -3,28 +3,23 @@ package com.example.fundflow
 import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
-import android.widget.CheckBox
-import android.widget.EditText
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
 class FinanceRegisterActivity : AppCompatActivity() {
 
-    // Declare variables for EditTexts and CheckBoxes
-    private lateinit var firstName: EditText
-    private lateinit var lastName: EditText
+    // Declare variables for EditTexts and CheckBox
+    private lateinit var financeName: EditText
+    private lateinit var username: EditText
     private lateinit var emailAddress: EditText
     private lateinit var password: EditText
     private lateinit var confirmPassword: EditText
-    private lateinit var showPassword: CheckBox
-    private lateinit var showConfirmPassword: CheckBox
+    private lateinit var mobileNumber: EditText
     private lateinit var termsConditions: CheckBox
     private lateinit var registerButton: Button
-    private lateinit var backarow: ImageView
+    private lateinit var backArrow: ImageView
 
     // Firebase instances
     private lateinit var auth: FirebaseAuth
@@ -32,42 +27,22 @@ class FinanceRegisterActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_finance_register)
+        setContentView(R.layout.activity_user_register) // Ensure XML file name is correct
 
         // Initialize Firebase Auth and Firestore
         auth = FirebaseAuth.getInstance()
         db = FirebaseFirestore.getInstance()
 
         // Initialize views
-        firstName = findViewById(R.id.first_name)
-        lastName = findViewById(R.id.last_name)
+        financeName = findViewById(R.id.financename)
+        username = findViewById(R.id.username)
         emailAddress = findViewById(R.id.email_address)
         password = findViewById(R.id.password)
         confirmPassword = findViewById(R.id.confirm_password)
-        showPassword = findViewById(R.id.show_password)
-        showConfirmPassword = findViewById(R.id.show_confirm_password)
+        mobileNumber = findViewById(R.id.mobile_number)
         termsConditions = findViewById(R.id.terms_conditions)
         registerButton = findViewById(R.id.register_button)
-        backarow =  findViewById(R.id.back)
-
-        // Set up the checkbox to toggle password visibility
-        showPassword.setOnCheckedChangeListener { _, isChecked ->
-            password.inputType = if (isChecked) {
-                InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
-            } else {
-                InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
-            }
-            password.setSelection(password.text.length)
-        }
-
-        showConfirmPassword.setOnCheckedChangeListener { _, isChecked ->
-            confirmPassword.inputType = if (isChecked) {
-                InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
-            } else {
-                InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
-            }
-            confirmPassword.setSelection(confirmPassword.text.length)
-        }
+        backArrow = findViewById(R.id.back)
 
         // Handle register button click
         registerButton.setOnClickListener {
@@ -99,7 +74,8 @@ class FinanceRegisterActivity : AppCompatActivity() {
             }
         }
 
-        backarow.setOnClickListener {
+        // Handle back arrow click
+        backArrow.setOnClickListener {
             startActivity(Intent(this, FinanceLoginActivity::class.java))
             finish()
         }
@@ -108,9 +84,10 @@ class FinanceRegisterActivity : AppCompatActivity() {
     // Save user data to Firestore
     private fun saveUserDataToFirestore(userId: String) {
         val user = hashMapOf(
-            "firstName" to firstName.text.toString(),
-            "lastName" to lastName.text.toString(),
-            "email" to emailAddress.text.toString()
+            "financeName" to financeName.text.toString(),
+            "username" to username.text.toString(),
+            "email" to emailAddress.text.toString(),
+            "mobileNumber" to mobileNumber.text.toString()
         )
 
         // Save the user data under the user's ID in Firestore
@@ -128,8 +105,9 @@ class FinanceRegisterActivity : AppCompatActivity() {
 
     // Validate user input
     private fun validateInputs(): Boolean {
-        if (firstName.text.isEmpty() || lastName.text.isEmpty() || emailAddress.text.isEmpty()
-            || password.text.isEmpty() || confirmPassword.text.isEmpty()) {
+        if (financeName.text.isEmpty() || username.text.isEmpty() || emailAddress.text.isEmpty()
+            || password.text.isEmpty() || confirmPassword.text.isEmpty() || mobileNumber.text.isEmpty()
+        ) {
             Toast.makeText(this, "Please fill out all fields", Toast.LENGTH_SHORT).show()
             return false
         }
@@ -141,6 +119,11 @@ class FinanceRegisterActivity : AppCompatActivity() {
 
         if (!termsConditions.isChecked) {
             Toast.makeText(this, "Please accept the Terms and Conditions", Toast.LENGTH_SHORT).show()
+            return false
+        }
+
+        if (mobileNumber.text.length != 10) {
+            Toast.makeText(this, "Please enter a valid 10-digit mobile number", Toast.LENGTH_SHORT).show()
             return false
         }
 

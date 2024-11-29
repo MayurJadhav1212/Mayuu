@@ -20,6 +20,7 @@ class UserRegisterActivity : AppCompatActivity() {
     private lateinit var emailAddress: EditText
     private lateinit var password: EditText
     private lateinit var confirmPassword: EditText
+    private lateinit var mobileNumber: EditText  // Declare mobile number EditText
     private lateinit var registerButton: Button
     private lateinit var backArrow: ImageView
 
@@ -41,6 +42,7 @@ class UserRegisterActivity : AppCompatActivity() {
         emailAddress = findViewById(R.id.email_address)
         password = findViewById(R.id.password)
         confirmPassword = findViewById(R.id.confirm_password)
+        mobileNumber = findViewById(R.id.mobile_number) // Initialize mobile number field
         registerButton = findViewById(R.id.register_button)
         backArrow = findViewById(R.id.back)
 
@@ -85,6 +87,7 @@ class UserRegisterActivity : AppCompatActivity() {
             if (validateInputs()) {
                 val email = emailAddress.text.toString().trim()
                 val pass = password.text.toString().trim()
+                val mobile = mobileNumber.text.toString().trim()  // Get mobile number
 
                 // Firebase create user
                 auth.createUserWithEmailAndPassword(email, pass)
@@ -94,7 +97,7 @@ class UserRegisterActivity : AppCompatActivity() {
                             val userId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
 
                             // Save user data to Firestore after successful registration
-                            saveUserDataToFirestore(userId)
+                            saveUserDataToFirestore(userId, mobile) // Pass mobile number to Firestore
 
                             // Registration success
                             Toast.makeText(this, "Registration Successful", Toast.LENGTH_SHORT).show()
@@ -116,12 +119,13 @@ class UserRegisterActivity : AppCompatActivity() {
         }
     }
 
-    // Save user data to Firestore
-    private fun saveUserDataToFirestore(userId: String) {
+    // Save user data to Firestore, including mobile number
+    private fun saveUserDataToFirestore(userId: String, mobile: String) {
         val user = hashMapOf(
             "firstName" to firstName.text.toString(),
             "lastName" to lastName.text.toString(),
-            "email" to emailAddress.text.toString()
+            "email" to emailAddress.text.toString(),
+            "mobile" to mobile // Include mobile number
         )
 
         // Save the user data under the user's ID in Firestore
@@ -140,8 +144,15 @@ class UserRegisterActivity : AppCompatActivity() {
     // Validate user input
     private fun validateInputs(): Boolean {
         if (firstName.text.isEmpty() || lastName.text.isEmpty() || emailAddress.text.isEmpty()
-            || password.text.isEmpty() || confirmPassword.text.isEmpty()) {
+            || password.text.isEmpty() || confirmPassword.text.isEmpty() || mobileNumber.text.isEmpty()) {
             Toast.makeText(this, "Please fill out all fields", Toast.LENGTH_SHORT).show()
+            return false
+        }
+
+        // Check if the mobile number is 10 digits
+        val mobile = mobileNumber.text.toString().trim()
+        if (mobile.length != 10) {
+            Toast.makeText(this, "Mobile number must be 10 digits", Toast.LENGTH_SHORT).show()
             return false
         }
 

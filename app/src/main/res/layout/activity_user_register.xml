@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/Lighter_Shade"
+
     tools:context=".UserRegisterActivity">
 
     <ImageView
@@ -30,10 +30,10 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
     <EditText
-        android:id="@+id/first_name"
+        android:id="@+id/financename"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:hint="Enter your first name"
+        android:hint="Enter your finance name"
         android:padding="14dp"
         android:background="@drawable/input_field_shadow"
         android:elevation="5dp"
@@ -41,21 +41,21 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintWidth_percent="0.8"
-        android:layout_marginTop="24dp" />  <!-- Increased marginTop -->
+        android:layout_marginTop="24dp" />
 
     <EditText
-        android:id="@+id/last_name"
+        android:id="@+id/username"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:hint="Enter your last name"
+        android:hint="Enter your full name"
         android:padding="14dp"
         android:background="@drawable/input_field_shadow"
         android:elevation="3dp"
-        app:layout_constraintTop_toBottomOf="@id/first_name"
+        app:layout_constraintTop_toBottomOf="@id/financename"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintWidth_percent="0.8"
-        android:layout_marginTop="16dp" />  <!-- Increased marginTop -->
+        android:layout_marginTop="16dp" />
 
     <EditText
         android:id="@+id/email_address"
@@ -66,11 +66,11 @@
         android:padding="14dp"
         android:background="@drawable/input_field_shadow"
         android:elevation="3dp"
-        app:layout_constraintTop_toBottomOf="@id/last_name"
+        app:layout_constraintTop_toBottomOf="@id/username"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintWidth_percent="0.8"
-        android:layout_marginTop="16dp" />  <!-- Increased marginTop -->
+        android:layout_marginTop="16dp" />
 
     <EditText
         android:id="@+id/password"
@@ -87,7 +87,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintWidth_percent="0.8"
-        android:layout_marginTop="20dp" />  <!-- Increased marginTop -->
+        android:layout_marginTop="20dp" />
 
     <EditText
         android:id="@+id/confirm_password"
@@ -104,7 +104,25 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintWidth_percent="0.8"
-        android:layout_marginTop="16dp" />  <!-- Increased marginTop -->
+        android:layout_marginTop="16dp" />
+
+    <!-- Mobile Number Input Field -->
+    <EditText
+        android:id="@+id/mobile_number"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Enter your mobile number"
+        android:padding="14dp"
+        android:background="@drawable/input_field_shadow"
+        android:elevation="3dp"
+        android:inputType="phone"
+        android:maxLength="10"
+    app:layout_constraintTop_toBottomOf="@id/confirm_password"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintWidth_percent="0.8"
+    android:layout_marginTop="16dp" />  <!-- Increased marginTop -->
+
 
     <Button
         android:id="@+id/register_button"
@@ -113,9 +131,8 @@
         android:text="Register"
         android:textColor="@android:color/white"
         android:padding="12dp"
-        android:backgroundTint="@color/blue"
-
-        app:layout_constraintTop_toBottomOf="@id/confirm_password"
+        android:background="@drawable/rounded_button"
+        app:layout_constraintTop_toBottomOf="@id/mobile_number"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintWidth_percent="0.8"
@@ -130,4 +147,5 @@
         app:layout_constraintTop_toBottomOf="@id/register_button"
         app:layout_constraintStart_toStartOf="@id/register_button"
         android:layout_marginTop="10dp" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
