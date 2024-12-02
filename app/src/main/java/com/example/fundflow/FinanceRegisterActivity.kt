@@ -27,7 +27,7 @@ class FinanceRegisterActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_user_register) // Ensure XML file name is correct
+        setContentView(R.layout.activity_finance_register) // Ensure XML file name is correct
 
         // Initialize Firebase Auth and Firestore
         auth = FirebaseAuth.getInstance()
