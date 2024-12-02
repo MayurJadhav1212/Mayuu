@@ -58,13 +58,12 @@ class UserProfileActivity : AppCompatActivity() {
                 .addOnSuccessListener { document ->
                     if (document != null && document.exists()) {
                         // Safely retrieve values
-                        val firstName = document.getString("firstName") ?: "Unknown"
-                        val lastName = document.getString("lastName") ?: "User"
+                        val username = document.getString("username") ?: "Unknown User"
                         val email = document.getString("email") ?: "Not provided"
                         val mobile = document.getString("mobile") ?: "Not provided" // Correct key
 
-                        // Display the user's name, email, and mobile number
-                        userName.text = "$firstName $lastName"
+                        // Display the user's username, email, and mobile number
+                        userName.text = username
                         userEmail.text = email
                         userMobile.text = mobile  // Display mobile number
                     } else {

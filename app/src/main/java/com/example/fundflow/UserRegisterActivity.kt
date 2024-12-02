@@ -15,12 +15,11 @@ import com.google.firebase.firestore.FirebaseFirestore
 class UserRegisterActivity : AppCompatActivity() {
 
     // Declare variables for EditTexts and Buttons
-    private lateinit var firstName: EditText
-    private lateinit var lastName: EditText
+    private lateinit var username: EditText // Changed from firstName and lastName to username
     private lateinit var emailAddress: EditText
     private lateinit var password: EditText
     private lateinit var confirmPassword: EditText
-    private lateinit var mobileNumber: EditText  // Declare mobile number EditText
+    private lateinit var mobileNumber: EditText
     private lateinit var registerButton: Button
     private lateinit var backArrow: ImageView
 
@@ -37,130 +36,123 @@ class UserRegisterActivity : AppCompatActivity() {
         db = FirebaseFirestore.getInstance()
 
         // Initialize views
-        firstName = findViewById(R.id.first_name)
-        lastName = findViewById(R.id.last_name)
+        username = findViewById(R.id.username) // Initialize username
         emailAddress = findViewById(R.id.email_address)
         password = findViewById(R.id.password)
         confirmPassword = findViewById(R.id.confirm_password)
-        mobileNumber = findViewById(R.id.mobile_number) // Initialize mobile number field
+        mobileNumber = findViewById(R.id.mobile_number)
         registerButton = findViewById(R.id.register_button)
         backArrow = findViewById(R.id.back)
 
         // Handle password visibility toggle for the "password" field
-        password.setOnTouchListener { _, event ->
-            if (event.action == MotionEvent.ACTION_UP) {
-                val drawableEnd = password.compoundDrawablesRelative[2] // Drawable at the end
-                if (drawableEnd != null && event.rawX >= (password.right - drawableEnd.bounds.width())) {
-                    if (password.inputType == InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD) {
-                        password.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
-                        password.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.baseline_visibility_off_24, 0)
-                    } else {
-                        password.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
-                        password.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.baseline_visibility_off_24, 0)
-                    }
-                    password.setSelection(password.text.length) // Keep cursor at the end
-                    true
-                } else false
-            } else false
-        }
+        togglePasswordVisibility(password)
 
         // Handle password visibility toggle for the "confirmPassword" field
-        confirmPassword.setOnTouchListener { _, event ->
-            if (event.action == MotionEvent.ACTION_UP) {
-                val drawableEnd = confirmPassword.compoundDrawablesRelative[2] // Drawable at the end
-                if (drawableEnd != null && event.rawX >= (confirmPassword.right - drawableEnd.bounds.width())) {
-                    if (confirmPassword.inputType == InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD) {
-                        confirmPassword.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
-                        confirmPassword.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.baseline_visibility_off_24, 0)
-                    } else {
-                        confirmPassword.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
-                        confirmPassword.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.baseline_visibility_off_24, 0)
-                    }
-                    confirmPassword.setSelection(confirmPassword.text.length) // Keep cursor at the end
-                    true
-                } else false
-            } else false
-        }
+        togglePasswordVisibility(confirmPassword)
 
         // Handle register button click
         registerButton.setOnClickListener {
             if (validateInputs()) {
                 val email = emailAddress.text.toString().trim()
                 val pass = password.text.toString().trim()
-                val mobile = mobileNumber.text.toString().trim()  // Get mobile number
+                val mobile = mobileNumber.text.toString().trim()
 
                 // Firebase create user
                 auth.createUserWithEmailAndPassword(email, pass)
                     .addOnCompleteListener(this) { task ->
                         if (task.isSuccessful) {
-                            // Get the current user ID
-                            val userId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
+                            val userId = auth.currentUser?.uid ?: ""
 
-                            // Save user data to Firestore after successful registration
-                            saveUserDataToFirestore(userId, mobile) // Pass mobile number to Firestore
+                            // Save user data to Firestore
+                            saveUserDataToFirestore(userId, mobile)
 
                             // Registration success
                             Toast.makeText(this, "Registration Successful", Toast.LENGTH_SHORT).show()
 
-                            // Optionally navigate to another activity
+                            // Navigate to login activity
                             startActivity(Intent(this, UserLoginActivity::class.java))
                             finish()
                         } else {
-                            // Registration failed
                             Toast.makeText(this, "Registration Failed: ${task.exception?.message}", Toast.LENGTH_LONG).show()
                         }
                     }
             }
         }
 
+        // Handle back arrow click
         backArrow.setOnClickListener {
             startActivity(Intent(this, UserLoginActivity::class.java))
             finish()
         }
     }
 
-    // Save user data to Firestore, including mobile number
+    // Save user data to Firestore, including username and mobile number
     private fun saveUserDataToFirestore(userId: String, mobile: String) {
         val user = hashMapOf(
-            "firstName" to firstName.text.toString(),
-            "lastName" to lastName.text.toString(),
+            "username" to username.text.toString(), // Store username
             "email" to emailAddress.text.toString(),
-            "mobile" to mobile // Include mobile number
+            "mobile" to mobile
         )
 
-        // Save the user data under the user's ID in Firestore
         db.collection("Users").document(userId).set(user)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    // User data saved successfully
                     Toast.makeText(this, "User Data Saved Successfully", Toast.LENGTH_SHORT).show()
                 } else {
-                    // Handle errors
                     Toast.makeText(this, "Failed to Save User Data: ${task.exception?.message}", Toast.LENGTH_LONG).show()
                 }
             }
     }
 
-    // Validate user input
+    // Validate user inputs
     private fun validateInputs(): Boolean {
-        if (firstName.text.isEmpty() || lastName.text.isEmpty() || emailAddress.text.isEmpty()
-            || password.text.isEmpty() || confirmPassword.text.isEmpty() || mobileNumber.text.isEmpty()) {
+        if (username.text.isEmpty() || emailAddress.text.isEmpty()
+            || password.text.isEmpty() || confirmPassword.text.isEmpty() || mobileNumber.text.isEmpty()
+        ) {
             Toast.makeText(this, "Please fill out all fields", Toast.LENGTH_SHORT).show()
             return false
         }
 
-        // Check if the mobile number is 10 digits
+        // Validate email format
+        val emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+"
+        if (!emailAddress.text.toString().trim().matches(emailPattern.toRegex())) {
+            Toast.makeText(this, "Please enter a valid email address", Toast.LENGTH_SHORT).show()
+            return false
+        }
+
+        // Check mobile number length
         val mobile = mobileNumber.text.toString().trim()
         if (mobile.length != 10) {
             Toast.makeText(this, "Mobile number must be 10 digits", Toast.LENGTH_SHORT).show()
             return false
         }
 
+        // Check if passwords match
         if (password.text.toString() != confirmPassword.text.toString()) {
             Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT).show()
             return false
         }
 
         return true
+    }
+
+    // Function to handle password visibility toggle
+    private fun togglePasswordVisibility(editText: EditText) {
+        editText.setOnTouchListener { _, event ->
+            if (event.action == MotionEvent.ACTION_UP) {
+                val drawableEnd = editText.compoundDrawablesRelative[2] // Drawable at the end
+                if (drawableEnd != null && event.rawX >= (editText.right - drawableEnd.bounds.width())) {
+                    if (editText.inputType == InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD) {
+                        editText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+                        editText.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.baseline_visibility_off_24, 0)
+                    } else {
+                        editText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+                        editText.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.baseline_visibility_off_24, 0)
+                    }
+                    editText.setSelection(editText.text.length)
+                    true
+                } else false
+            } else false
+        }
     }
 }
